@@ -6,7 +6,7 @@ import 'dart:convert';
 
 const request = "https://raw.githubusercontent.com/Gabrielksi/arquivo-json-e-imagens/master/db.json";
 
-List data;
+List list;
 
 void main() => runApp(MaterialApp(
       home: Home(),
@@ -18,18 +18,32 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
+Future<String> dados() async {
 
+  http.Response response = await http.get(request);
+
+  if(response.statusCode == 200){
+    var data = json.decode(response.body);
+    list = data["biblioteca"];
+
+  }else{
+    print("falha");
+  }
+
+  return("sucesso");
+}
 class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<Map>(
+      body: FutureBuilder<String>(
         future: dados(),
         builder: (context, snapShot) {
           switch (snapShot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
+              print(list);
               return Center(
                 child: Text(
                   "Carregando...",
@@ -68,8 +82,8 @@ Widget _card(item) {
                     padding: EdgeInsets.only(bottom: 8),
                   ),*/
                   ListTile(
-                    title: Text(item['biblioteca']['titulo']),
-                    subtitle: Text(item['biblioteca']['autor']),
+                    title: Text(item['titulo']),
+                    subtitle: Text(item['autor']),
                   )
                 ],
               ),
@@ -81,20 +95,14 @@ Widget _card(item) {
 
 Widget _minhaListView() {
   return ListView.builder(
+    //scrollDirection: Axis.horizontal,
+    //shrinkWrap: true,
+    itemCount: list == null ? 0 : list.length,
     padding: const EdgeInsets.all(16),
     itemBuilder: (context, index) {
-      return _card(data[index]);
+      return _card(list[index]);
     },
-    itemCount: data == null ? 0 : data.length,
   );
 }
 
-Future<Map> dados() async {
-  http.Response response = await http.get(request);
-  /*var jsonResponse = json.decode(response.body);
-  setState((){
-    data = jsonResponse['biblioteca'];
-  });*/
-  //data = json.decode(response.body);
-  return json.decode(response.body);
-}
+
