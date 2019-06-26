@@ -9,9 +9,9 @@ const request = "https://raw.githubusercontent.com/Gabrielksi/arquivo-json-e-ima
 List list;
 
 void main() => runApp(MaterialApp(
-      home: Home(),
-      debugShowCheckedModeBanner: false,
-    ));
+  home: Home(),
+  debugShowCheckedModeBanner: false,
+));
 
 class Home extends StatefulWidget {
 
@@ -77,10 +77,10 @@ Widget _card(item) {
               padding: EdgeInsets.all(20),
               child: Column(
                 children: <Widget>[
-                  /*Padding(
-                    child: Image.network(src),
+                  Padding(
+                    child: Image.network(item['imagePath']),
                     padding: EdgeInsets.only(bottom: 8),
-                  ),*/
+                  ),
                   ListTile(
                     title: Text(item['titulo']),
                     subtitle: Text(item['autor']),
@@ -104,5 +104,3 @@ Widget _minhaListView() {
     },
   );
 }
-
-
