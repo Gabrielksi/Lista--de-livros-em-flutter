@@ -4,36 +4,35 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-const request = "https://raw.githubusercontent.com/Gabrielksi/arquivo-json-e-imagens/master/db.json";
+const request =
+    "https://raw.githubusercontent.com/Gabrielksi/arquivo-json-e-imagens/master/db.json";
 
 List list;
 
 void main() => runApp(MaterialApp(
-  home: Home(),
-  debugShowCheckedModeBanner: false,
-));
+      home: Home(),
+      debugShowCheckedModeBanner: false,
+    ));
 
 class Home extends StatefulWidget {
-
   @override
   _HomeState createState() => _HomeState();
 }
-Future<String> dados() async {
 
+Future<String> dados() async {
   http.Response response = await http.get(request);
 
-  if(response.statusCode == 200){
+  if (response.statusCode == 200) {
     var data = json.decode(response.body);
     list = data["biblioteca"];
-
-  }else{
+  } else {
     print("falha");
   }
 
-  return("sucesso");
+  return ("sucesso");
 }
-class _HomeState extends State<Home> {
 
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,37 +69,38 @@ class _HomeState extends State<Home> {
 
 Widget _card(item) {
   return Container(
-      margin: EdgeInsets.all(8),
-      child: ListTile(
-          title: Card(
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    child: Image.network(item['imagePath']),
-                    padding: EdgeInsets.only(bottom: 8),
-                  ),
-                  ListTile(
-                    title: Text(item['titulo']),
-                    subtitle: Text(item['autor']),
-                  )
-                ],
-              ),
+    width: 270,
+    child: ListTile(
+        title: Card(
+          child: Container(
+            height: 400,
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  child: Image.network(item['imagePath']),
+                  padding: EdgeInsets.only(bottom: 8),
+                ),
+                ListTile(
+                  //title: Text(item['titulo']),
+                  //subtitle: Text(item['autor']),
+                )
+              ],
             ),
-          )
-      )
+          ),
+        )),
   );
 }
 
 Widget _minhaListView() {
   return ListView.builder(
-    //scrollDirection: Axis.horizontal,
-    //shrinkWrap: true,
-    itemCount: list == null ? 0 : list.length,
-    padding: const EdgeInsets.all(16),
-    itemBuilder: (context, index) {
-      return _card(list[index]);
-    },
-  );
+      scrollDirection: Axis.horizontal,
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      itemCount: list == null ? 0 : list.length,
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (context, index) {
+        return _card(list[index]);
+      },
+    );
 }
